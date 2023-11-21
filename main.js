@@ -4,9 +4,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
-import obj2gltf from "obj2gltf";
-import fs from "fs";
-
 // guide: https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
 
 const scene = new THREE.Scene();
@@ -21,9 +18,9 @@ var mtlLoader;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
+// renderer.setPixelRatio( window.devicePixelRatio * 0.5 );     // decrease resolution - runs faster, looks worse
 renderer.setClearColor(0xacc1e3);     // set background colour
 document.body.appendChild( renderer.domElement );
-
 // setup stats (for debugging)
 var stats = new Stats();
 stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -49,12 +46,13 @@ function initLights() {
     light1 = new THREE.PointLight(0xffffff, 750.0);
     light1.position.set(0,25,2);
     scene.add(light1);
-    light2 = new THREE.PointLight(0xffffff, 750.0);
-    light2.position.set(35,25,2);
-    scene.add(light2);
-    light3 = new THREE.PointLight(0xffffff, 750.0);
-    light3.position.set(-35,25,2);
-    scene.add(light3);
+    // removed for performance
+    // light2 = new THREE.PointLight(0xffffff, 750.0);
+    // light2.position.set(35,25,2);
+    // scene.add(light2);
+    // light3 = new THREE.PointLight(0xffffff, 750.0);
+    // light3.position.set(-35,25,2);
+    // scene.add(light3);
     ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 }
@@ -286,31 +284,22 @@ function initObjects() {
     // toilet
     // from: https://www.cgtrader.com/free-3d-models/architectural/fixture/bathroom-toilet-62ec8361-4aae-4c13-acbd-16462b6b20d8
     // used "decimate" modifier from blender to reduce obj file size
-    // converted to gltf using: https://github.com/CesiumGS/obj2gltf
+    // converted to gltf/glb using blender
 
     gltfLoader = new GLTFLoader();
     objLoader = new OBJLoader();
     mtlLoader = new MTLLoader();
 
-    obj2gltf("obj/toilet_dec_planar.obj").then(function (gltf) {
-        const data = Buffer.from(JSON.stringify(gltf));
-        fs.writeFileSync("obj/toilet_dec_planar.gltf", data);
-    });
-
     gltfLoader.load(
         // resource URL
-        'obj/toilet_dec_planar.gltf',
+        'obj/toilet.glb',
         // called when the resource is loaded
         function ( gltf ) {
     
             scene.add( gltf.scene );
-    
-            gltf.animations; // Array<THREE.AnimationClip>
-            gltf.scene; // THREE.Group
-            gltf.scenes; // Array<THREE.Group>
-            gltf.cameras; // Array<THREE.Camera>
-            gltf.asset; // Object
-    
+            gltf.scene.scale.set(10, 10, 10);
+            gltf.scene.position.set(1.35, -1, 0);
+            console.log("object loaded");
         },
         // called while loading is progressing
         function ( xhr ) {
