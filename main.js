@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
 // guide: https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
 
@@ -13,8 +11,6 @@ var light2;
 var light3;
 var ambientLight;
 var gltfLoader;
-var objLoader;
-var mtlLoader;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -31,14 +27,16 @@ function initCamera() {
     // TODO: figure out how to make camera initialize looking in a diff direction
     console.log("initCamera called");
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera.position.x = 0;
     camera.position.y = 7;
     camera.position.z = -2;
-    // camera.lookAt(0, 3, 10);
 
     var controls = new OrbitControls(camera, renderer.domElement);
-    controls.damping = 0.2;
+    controls.damping = 0.5;
     controls.autoRotate = false;
     // controls.target = new THREE.Vector3(0, 3, 10);
+
+
 }
 
 // setup lights
@@ -46,6 +44,7 @@ function initLights() {
     light1 = new THREE.PointLight(0xffffff, 750.0);
     light1.position.set(0,25,2);
     scene.add(light1);
+    light1.shadow.autoUpdate = false;
     // removed for performance
     // light2 = new THREE.PointLight(0xffffff, 750.0);
     // light2.position.set(35,25,2);
@@ -60,11 +59,11 @@ function initLights() {
 // setup objects
 function initObjects() {
     var textureLoader = new THREE.TextureLoader();
-    // cube
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
-    const cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    // // cube
+    // const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    // const material = new THREE.MeshPhongMaterial( { color: 0x00ff00 } );
+    // const cube = new THREE.Mesh( geometry, material );
+    // scene.add( cube );
 
     // textured floor
     // from: https://www.istockphoto.com/vector/vector-white-modern-abstract-background-gm946593026-258493578
@@ -86,7 +85,7 @@ function initObjects() {
     bgWallBumpMap.wrapT = THREE.RepeatWrapping;
 
     var bgWallGeometry = new THREE.BoxGeometry(17, 15, 2);
-    var bgWallMaterial = new THREE.MeshStandardMaterial( { color: 0xc9ba99, bumpMap: bgWallBumpMap} );
+    var bgWallMaterial = new THREE.MeshPhongMaterial( { color: 0xc9ba99, bumpMap: bgWallBumpMap} );
     var bgWall = new THREE.Mesh(bgWallGeometry, bgWallMaterial);
     bgWall.position.set(0, 6.4, -3.70);
     scene.add(bgWall);
@@ -100,7 +99,7 @@ function initObjects() {
     stallBumpMap.wrapS = THREE.RepeatWrapping;
     stallBumpMap.wrapT = THREE.RepeatWrapping;
 
-    var stallWallMaterial = new THREE.MeshStandardMaterial( { color: 0x6f6b80, bumpMap: stallBumpMap} );
+    var stallWallMaterial = new THREE.MeshPhongMaterial( { color: 0x6f6b80, bumpMap: stallBumpMap} );
     stallWallMaterial.needsUpdate = true;
     var stallWalls = new THREE.InstancedMesh(stallWallGeometry, stallWallMaterial, 2);
 
@@ -154,8 +153,11 @@ function initObjects() {
     scene.add(stallDoor);
 
     // TODO: look into envmap for metalMaterial
+
+    // scene.environment = new THREE.PMREMGenerator(renderer).fromScene(scene).texture;
+
     var stallTopBarGeometry = new THREE.BoxGeometry(9.75, 0.35, 0.3);
-    var metalMaterial = new THREE.MeshStandardMaterial({ color: 0x909596, emissive: 0x1c1d1f, metalness: 1.0 });
+    var metalMaterial = new THREE.MeshPhongMaterial({ color: 0x909596, emissive: 0x1c1d1f, metalness: 1.0 });
     var stallTopBar = new THREE.Mesh(stallTopBarGeometry, metalMaterial);
     stallTopBar.position.set(0, 13.67, 9.1);
     scene.add(stallTopBar);
@@ -287,9 +289,6 @@ function initObjects() {
     // converted to gltf/glb using blender
 
     gltfLoader = new GLTFLoader();
-    objLoader = new OBJLoader();
-    mtlLoader = new MTLLoader();
-
     gltfLoader.load(
         // resource URL
         'obj/toilet.glb',
@@ -314,29 +313,6 @@ function initObjects() {
     
         }
     );
-
-    // mtlLoader.load('obj/toilet_mtl.mtl', 
-    //     function(materials) {
-    //         materials.preload();
-    //         objLoader.setMaterials(materials);
-    //         objLoader.load('obj/toilet_dec_planar.obj', 
-
-    //         function ( object ) {
-    //             object.scale.set(0.01, 0.01, 0.01);
-    //             object.position.set(1.35, -1, 0);
-    //             scene.add( object );
-    //         },
-
-    //         function ( xhr ) {
-    //             console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-    //         },
-
-    //         // called when loading has errors
-    //         function ( error ) {
-    //             console.log( 'An error happened' );
-    //         });
-    //     }
-    // );
 
 
     
