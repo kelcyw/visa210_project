@@ -67,7 +67,7 @@ function initObjects() {
 
     // textured floor
     // from: https://www.istockphoto.com/vector/vector-white-modern-abstract-background-gm946593026-258493578
-    var floorTexture = textureLoader.load('images/floor_tiling.jpg');
+    var floorTexture = textureLoader.load('./images/floor_tiling.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(1, 1);
     var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
@@ -304,7 +304,7 @@ function initObjects() {
     gltfLoader = new GLTFLoader();
     gltfLoader.load(
         // resource URL
-        'obj/toilet.glb',
+        './obj/toilet.glb',
         // called when the resource is loaded
         function ( gltf ) {
     
