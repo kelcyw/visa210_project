@@ -67,7 +67,7 @@ function initObjects() {
 
     // textured floor
     // from: https://www.istockphoto.com/vector/vector-white-modern-abstract-background-gm946593026-258493578
-    var floorTexture = new THREE.TextureLoader().load('images/floor_tiling.jpg');
+    var floorTexture = textureLoader.load('images/floor_tiling.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(1, 1);
     var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
@@ -81,8 +81,7 @@ function initObjects() {
     // bumpmap texture from: https://blog.spoongraphics.co.uk/freebies/10-free-seamless-subtle-grunge-concrete-textures
     var bgWallBumpMap = textureLoader.load('./images/concrete_bumpmap.jpg');
     bgWallBumpMap.repeat.set(1, 1);
-    bgWallBumpMap.wrapS = THREE.RepeatWrapping;
-    bgWallBumpMap.wrapT = THREE.RepeatWrapping;
+    bgWallBumpMap.wrapS = bgWallBumpMap.wrapT = THREE.RepeatWrapping;
 
     var bgWallGeometry = new THREE.BoxGeometry(17, 15, 2);
     var bgWallMaterial = new THREE.MeshPhongMaterial( { color: 0xc9ba99, bumpMap: bgWallBumpMap} );
@@ -96,8 +95,7 @@ function initObjects() {
 
     var stallBumpMap = textureLoader.load('./images/stall_normal_map.jpg');
     stallBumpMap.repeat.set(1, 1);
-    stallBumpMap.wrapS = THREE.RepeatWrapping;
-    stallBumpMap.wrapT = THREE.RepeatWrapping;
+    stallBumpMap.wrapS = stallBumpMap.wrapT = THREE.RepeatWrapping;
 
     var stallWallMaterial = new THREE.MeshPhongMaterial( { color: 0x6f6b80, bumpMap: stallBumpMap} );
     stallWallMaterial.needsUpdate = true;
@@ -276,6 +274,21 @@ function initObjects() {
     // hingeAttachBot2.position.set(2.55, 2.95, 8.9);
     // scene.add(hingeAttachBot2);
 
+    var doorLockGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.05, 16);
+    var doorLock = new THREE.InstancedMesh(doorLockGeometry, metalMaterial, 2);
+    doorLock.position.set(0, 5, 5);
+    transform.set(1.0, 0.0,  0.0, -2.25,
+                  0.0, 0.0,  -1.0, 1.75,
+                  0.0, 1.0,  0.0, 3.95,
+                  0.0, 0.0,  0.0, 1.0);
+    doorLock.setMatrixAt(0, transform);
+    transform.set(1.0, 0.0,  0.0, -2.25,
+                  0.0, 0.0,  -1.0, 1.75,
+                  0.0, 1.0,  0.0, 4.25,
+                  0.0, 0.0,  0.0, 1.0);
+    doorLock.setMatrixAt(1, transform);            
+    scene.add(doorLock);
+
     resetUVs(bgWall);
     resetUVs(stallWalls);
     // resetUVs(stallWall2);
@@ -314,8 +327,96 @@ function initObjects() {
         }
     );
 
+}
 
+// setup images (text)
+function initImages() {
+    var imageLoader = new THREE.ImageBitmapLoader();
+    imageLoader.setOptions( { imageOrientation: 'flipY' } );
+
+    var imageGeometry = new THREE.PlaneGeometry(5, 5);
+
+    var text1;
+    imageLoader.load(
+        // resource URL
+        './images/bath_text_full_1.png',
     
+        // onLoad callback
+        function ( imageBitmap ) {
+            var texture = new THREE.CanvasTexture( imageBitmap );
+		    var material = new THREE.MeshBasicMaterial( { map: texture } );
+            material.transparent = true;
+            text1 = createImage(material, 11, imageGeometry);
+            scene.add(text1);
+            text1.position.set(-4.13, 8.5, 2.5);
+            text1.rotation.set(0, Math.PI / 2, 0);
+        },
+    
+        // onProgress callback currently not supported
+        undefined,
+    
+        // onError callback
+        function ( err ) {
+            console.log( 'An error happened' ); 
+        }
+    );
+
+    var text2;
+    imageLoader.load(
+        // resource URL
+        './images/bath_text_full_2.png',
+    
+        // onLoad callback
+        function ( imageBitmap ) {
+            var texture = new THREE.CanvasTexture( imageBitmap );
+		    var material = new THREE.MeshBasicMaterial( { map: texture } );
+            material.transparent = true;
+            text2 = createImage(material, 8, imageGeometry);
+            scene.add(text2);
+            text2.position.set(0, 7, 8.9);
+            text2.rotation.set(0, Math.PI, 0);
+        },
+    
+        // onProgress callback currently not supported
+        undefined,
+    
+        // onError callback
+        function ( err ) {
+            console.log( 'An error happened' ); 
+        }
+    );
+
+    var text3;
+    imageLoader.load(
+        // resource URL
+        './images/bath_text_full_3.png',
+    
+        // onLoad callback
+        function ( imageBitmap ) {
+            var texture = new THREE.CanvasTexture( imageBitmap );
+		    var material = new THREE.MeshBasicMaterial( { map: texture } );
+            material.transparent = true;
+            text3 = createImage(material, 11, imageGeometry);
+            scene.add(text3);
+            text3.position.set(4.13, 8, 3);
+            text3.rotation.set(0, -Math.PI / 2, 0);
+        },
+    
+        // onProgress callback currently not supported
+        undefined,
+    
+        // onError callback
+        function ( err ) {
+            console.log( 'An error happened' ); 
+        }
+    );
+
+}
+
+function createImage(image, size, geo) {
+    var imageMesh = new THREE.Mesh(geo, image);
+    imageMesh.scale.set(size / 5, size / 5, size / 5);
+    return imageMesh;
 }
 
 // a function that resets the UVs 
@@ -370,6 +471,7 @@ function init() {
     initCamera();
     initLights();
     initObjects();
+    initImages();
 
     window.addEventListener('resize',resize);
     resize();
@@ -387,6 +489,7 @@ function animate() {
 	requestAnimationFrame( animate );
     stats.begin();
 	renderer.render( scene, camera );
+    console.log(renderer.info.render.calls);
     stats.end();
 }
 init();
