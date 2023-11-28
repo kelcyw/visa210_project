@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js'
+import Stats from 'https://cdnjs.cloudflare.com/ajax/libs/stats.js/17/Stats.js';
 // guide: https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene
 
 const scene = new THREE.Scene();
@@ -67,7 +67,7 @@ function initObjects() {
 
     // textured floor
     // from: https://www.istockphoto.com/vector/vector-white-modern-abstract-background-gm946593026-258493578
-    var floorTexture = textureLoader.load('./public/images/floor_tiling.jpg');
+    var floorTexture = textureLoader.load('./images/floor_tiling.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(1, 1);
     var floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
@@ -79,7 +79,7 @@ function initObjects() {
 
     // back wall
     // bumpmap texture from: https://blog.spoongraphics.co.uk/freebies/10-free-seamless-subtle-grunge-concrete-textures
-    var bgWallBumpMap = textureLoader.load('./public/images/concrete_bumpmap.jpg');
+    var bgWallBumpMap = textureLoader.load('./images/concrete_bumpmap.jpg');
     bgWallBumpMap.repeat.set(1, 1);
     bgWallBumpMap.wrapS = bgWallBumpMap.wrapT = THREE.RepeatWrapping;
 
@@ -93,7 +93,7 @@ function initObjects() {
     // bumpmap texture from: https://en.wikipedia.org/wiki/File:Popcorn_ceiling_texture_close_up.jpg
     var stallWallGeometry = new THREE.BoxGeometry(13, 12, 0.3);
 
-    var stallBumpMap = textureLoader.load('./public/images/stall_normal_map.jpg');
+    var stallBumpMap = textureLoader.load('./images/stall_normal_map.jpg');
     stallBumpMap.repeat.set(1, 1);
     stallBumpMap.wrapS = stallBumpMap.wrapT = THREE.RepeatWrapping;
 
@@ -304,7 +304,7 @@ function initObjects() {
     gltfLoader = new GLTFLoader();
     gltfLoader.load(
         // resource URL
-        './public/obj/toilet.glb',
+        './obj/toilet.glb',
         // called when the resource is loaded
         function ( gltf ) {
     
@@ -339,7 +339,7 @@ function initImages() {
     var text1;
     imageLoader.load(
         // resource URL
-        './public/images/bath_text_full_1.png',
+        './images/bath_text_full_1.png',
     
         // onLoad callback
         function ( imageBitmap ) {
@@ -364,7 +364,7 @@ function initImages() {
     var text2;
     imageLoader.load(
         // resource URL
-        './public/images/bath_text_full_2.png',
+        './images/bath_text_full_2.png',
     
         // onLoad callback
         function ( imageBitmap ) {
@@ -389,7 +389,7 @@ function initImages() {
     var text3;
     imageLoader.load(
         // resource URL
-        './public/images/bath_text_full_3.png',
+        './images/bath_text_full_3.png',
     
         // onLoad callback
         function ( imageBitmap ) {
