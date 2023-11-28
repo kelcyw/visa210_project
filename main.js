@@ -14,7 +14,6 @@ var gltfLoader;
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
-// renderer.setPixelRatio( window.devicePixelRatio * 0.5 );     // decrease resolution - runs faster, looks worse
 renderer.setClearColor(0xacc1e3);     // set background colour
 document.body.appendChild( renderer.domElement );
 // setup stats (for debugging)
@@ -34,7 +33,6 @@ function initCamera() {
     var controls = new OrbitControls(camera, renderer.domElement);
     controls.damping = 0.5;
     controls.autoRotate = false;
-    // controls.target = new THREE.Vector3(0, 3, 10);
 
 
 }
@@ -76,6 +74,8 @@ function initObjects() {
     floor.position.y = -1.1;
     floor.rotation.x = Math.PI / 2;
     scene.add(floor);
+    floor.matrixAutoUpdate = false;
+    floor.updateMatrix();
 
     // back wall
     // bumpmap texture from: https://blog.spoongraphics.co.uk/freebies/10-free-seamless-subtle-grunge-concrete-textures
@@ -84,20 +84,22 @@ function initObjects() {
     bgWallBumpMap.wrapS = bgWallBumpMap.wrapT = THREE.RepeatWrapping;
 
     var bgWallGeometry = new THREE.BoxGeometry(17, 15, 2);
-    var bgWallMaterial = new THREE.MeshPhongMaterial( { color: 0xc9ba99, bumpMap: bgWallBumpMap} );
+    var bgWallMaterial = new THREE.MeshLambertMaterial( { color: 0xc9ba99, bumpMap: bgWallBumpMap} );
     var bgWall = new THREE.Mesh(bgWallGeometry, bgWallMaterial);
     bgWall.position.set(0, 6.4, -3.70);
     scene.add(bgWall);
+    bgWall.matrixAutoUpdate = false;
+    bgWall.updateMatrix();
 
     // stall
     // bumpmap texture from: https://en.wikipedia.org/wiki/File:Popcorn_ceiling_texture_close_up.jpg
     var stallWallGeometry = new THREE.BoxGeometry(13, 12, 0.3);
 
-    var stallBumpMap = textureLoader.load('./images/stall_normal_map.jpg');
+    var stallBumpMap = textureLoader.load('./images/stall_normal_map_2.jpg');
     stallBumpMap.repeat.set(1, 1);
     stallBumpMap.wrapS = stallBumpMap.wrapT = THREE.RepeatWrapping;
 
-    var stallWallMaterial = new THREE.MeshPhongMaterial( { color: 0x6f6b80, bumpMap: stallBumpMap} );
+    var stallWallMaterial = new THREE.MeshLambertMaterial( { color: 0x6f6b80, bumpMap: stallBumpMap} );
     stallWallMaterial.needsUpdate = true;
     var stallWalls = new THREE.InstancedMesh(stallWallGeometry, stallWallMaterial, 2);
 
@@ -116,6 +118,8 @@ function initObjects() {
                   0.0, 0.0,  0.0, 1.0);
     stallWalls.setMatrixAt(1, transform);
     scene.add(stallWalls);
+    stallWalls.matrixAutoUpdate = false;
+    stallWalls.updateMatrix();
 
     // var stallWall2 = stallWall1.clone();
     // stallWall2.position.set(4.3, 7.5, 2.5);
@@ -139,6 +143,9 @@ function initObjects() {
     stallPillars.setMatrixAt(1, transform);
     scene.add(stallPillars);
 
+    stallPillars.matrixAutoUpdate = false;
+    stallPillars.updateMatrix();
+
     // var stallPillar2 = stallPillar1.clone();
     // stallPillar2.position.set(3.7, 6.15, 9.1);
     // scene.add(stallPillar2);
@@ -150,7 +157,8 @@ function initObjects() {
     // stallDoor.rotation.set(0, Math.PI / 2, 0);
     scene.add(stallDoor);
 
-    // TODO: look into envmap for metalMaterial
+    stallDoor.matrixAutoUpdate = false;
+    stallDoor.updateMatrix();
 
     // scene.environment = new THREE.PMREMGenerator(renderer).fromScene(scene).texture;
 
@@ -159,6 +167,8 @@ function initObjects() {
     var stallTopBar = new THREE.Mesh(stallTopBarGeometry, metalMaterial);
     stallTopBar.position.set(0, 13.67, 9.1);
     scene.add(stallTopBar);
+    stallTopBar.matrixAutoUpdate = false;
+    stallTopBar.updateMatrix();
 
     var stallPillarCapGeometry = new THREE.BoxGeometry(2.05, 0.55, 0.35);
     var stallPillarCaps = new THREE.InstancedMesh(stallPillarCapGeometry, metalMaterial, 2);
@@ -177,6 +187,8 @@ function initObjects() {
     stallPillarCaps.setMatrixAt(1, transform);   
 
     scene.add(stallPillarCaps);
+    stallPillarCaps.matrixAutoUpdate = false;
+    stallPillarCaps.updateMatrix();
 
     // var stallPillarCap2 = stallPillarCap1.clone();
     // stallPillarCap2.position.set(3.7, -0.85, 9.1);
@@ -218,6 +230,9 @@ function initObjects() {
     hinges.setMatrixAt(3, transform);
 
     scene.add(hinges);
+
+    hinges.matrixAutoUpdate = false;
+    hinges.updateMatrix();
 
     // var hingeTop2 = hingeTop1.clone();
     // hingeTop2.position.set(2.65, 9.95, 8.9);
@@ -262,17 +277,8 @@ function initObjects() {
 
     scene.add(hingeAttachments);
 
-    // var hingeAttachTop2 = hingeAttachTop1.clone();
-    // hingeAttachTop2.position.set(2.55, 9.95, 8.9);
-    // scene.add(hingeAttachTop2);
-
-    // var hingeAttachBot1 = hingeAttachTop1.clone();
-    // hingeAttachBot1.position.set(2.75, 3.5, 8.9);
-    // scene.add(hingeAttachBot1);
-
-    // var hingeAttachBot2 = hingeAttachTop1.clone();
-    // hingeAttachBot2.position.set(2.55, 2.95, 8.9);
-    // scene.add(hingeAttachBot2);
+    hingeAttachments.matrixAutoUpdate = false;
+    hingeAttachments.updateMatrix();
 
     var doorLockGeometry = new THREE.CylinderGeometry(0.15, 0.15, 0.05, 16);
     var doorLock = new THREE.InstancedMesh(doorLockGeometry, metalMaterial, 2);
@@ -289,11 +295,12 @@ function initObjects() {
     doorLock.setMatrixAt(1, transform);            
     scene.add(doorLock);
 
+    doorLock.matrixAutoUpdate = false;
+    doorLock.updateMatrix();
+
     resetUVs(bgWall);
     resetUVs(stallWalls);
-    // resetUVs(stallWall2);
     resetUVs(stallPillars);
-    // resetUVs(stallPillar2);
     resetUVs(stallDoor);
 
     // toilet
@@ -484,11 +491,30 @@ function resize() {
     camera.updateProjectionMatrix();
 }
 
+// check keyboard presses
+var keyboard = new THREEx.KeyboardState();
+function checkKeyboard() {
+  if (keyboard.pressed("1")) {
+    console.log('1 pressed');
+    renderer.setPixelRatio( window.devicePixelRatio * 0.5 );     // decrease resolution - runs faster, looks worse
+  } else if (keyboard.pressed("2")) {
+    console.log('2 pressed');
+    renderer.setPixelRatio( window.devicePixelRatio * 0.75 );
+  } else if (keyboard.pressed("3")) {
+    console.log('3 pressed');
+    renderer.setPixelRatio( window.devicePixelRatio * 0.9 );
+  } else if (keyboard.pressed("4")) {
+    console.log('4 pressed');
+    renderer.setPixelRatio( window.devicePixelRatio);
+  }
+}
+
 // run everything
 function animate() {
 	requestAnimationFrame( animate );
     stats.begin();
 	renderer.render( scene, camera );
+    checkKeyboard();
     console.log(renderer.info.render.calls);
     stats.end();
 }
