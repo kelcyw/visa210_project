@@ -10,16 +10,25 @@ While reflecting on the process of building and coding the 3D environment, I am 
 Found “materials”/sources:
 
 Floor texture: https://www.istockphoto.com/vector/vector-white-modern-abstract-background-gm946593026-258493578
+
 Toilet model (converted to GLTF, using Blender): https://www.cgtrader.com/free-3d-models/architectural/fixture/bathroom-toilet-62ec8361-4aae-4c13-acbd-16462b6b20d8
+
 Bathroom stall texture: https://en.wikipedia.org/wiki/File:Popcorn_ceiling_texture_close_up.jpg
+
 Wall texture: https://blog.spoongraphics.co.uk/freebies/10-free-seamless-subtle-grunge-concrete-textures
+
 Comment links: 
 
 https://www.reddit.com/r/UBC/comments/17kwsoq/how_many_of_you_all_struggle_with_insecurities/
+
 https://www.reddit.com/r/UBC/comments/17yowiw/im_so_scared/
+
 https://www.reddit.com/r/UBC/comments/181uevz/i_am_in_pain/
+
 https://www.reddit.com/r/UBC/comments/17etfk3/ikb_i_kant_breathe/
+
 https://www.reddit.com/r/UBC/comments/1815005/am_i_stupid_or_is_ubc_actually_hard/
+
 https://boards.4channel.org/fa/thread/17904680#q17904680
 
 The opinions and views expressed in this project are not my own, and originate from bathroom graffiti found in washrooms from the AMS Nest and Buchanan B Building, as well as posts from UBC Reddit and 4chan.
